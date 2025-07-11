@@ -11,18 +11,6 @@ class Linear(nn.Module):
         nn.init.trunc_normal_(W, std=0.2)
         self.W = nn.Parameter(W)
 
-
-        
-
-
-
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = x @ self.W.T
         return x 
-l = Linear(2,3) 
-# ok so we give 2 ,3 as in, out 
-# and it is intialized as 3, 2 as out , in 
-#and then we do again .T 2 3 
-x = torch.randn((4,2))
-
-print(l(x))

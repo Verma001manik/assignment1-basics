@@ -61,9 +61,3 @@ class RotaryPositionalEmbedding(nn.Module):
         x_rotated[..., 1::2] = x1 * sin[..., 1::2] + x2 * cos[..., 1::2]
         return  x_rotated
 
-
-
-
-# Wq is the learnable weights for query 
-# x(i) is the vector embedding of mary of size (1, d_model)
-# q(i)  = Wq* x(i) 

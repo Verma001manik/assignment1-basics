@@ -16,4 +16,3 @@ class Embedding(nn.Module):
 
         return self.embedding_table[token_ids]
 
-e = Embedding(3,4)

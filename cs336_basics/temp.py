@@ -62,4 +62,14 @@ n_embeddings = torch.randn((3,6,64))
 
 # t = RotaryPositionalEmbedding(theta, d_model, max_seq_len)
 # t(n_embeddings, pos_ids) 
+seq_len = torch.zeros((3,3))
+seq_len[:, 0::2]= 1
+a = torch.randn((3,3))
+print(a)
 
+a = a.masked_fill(seq_len==0, float('-inf'))
+print(a)
+
+# ok so to change a , the desision is in control of mask and not a 
+# wherever we see true in mask 
+# there we do 
