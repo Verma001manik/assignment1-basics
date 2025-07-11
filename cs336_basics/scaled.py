@@ -24,6 +24,8 @@ def scaled_dot_product_attention(q,k,v, mask=None):
     #above @ k -> b , seq_len ,seq_len --> b, seq_len, d_v--> b , seq_len ,d_v 
     #v = b, ..., seq_len , d_v 
 
+
+    
     
 
 
