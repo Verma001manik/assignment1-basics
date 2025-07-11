@@ -2,13 +2,13 @@ import torch
 import torch.nn as nn 
 import numpy as np 
 
-def softmax(x,i):
-    maxi = torch.max(x, dim=i , keepdim=True).values
+def softmax(x,dim):
+    maxi = torch.max(x, dim=dim , keepdim=True).values
     x = x-maxi 
 
-    exp_num = np.exp(x)
+    exp_num = torch.exp(x)
 
-    out = exp_num/torch.sum(exp_num, dim=i, keepdim=True)
+    out = exp_num/torch.sum(exp_num, dim=dim, keepdim=True)
     return out 
 
 
