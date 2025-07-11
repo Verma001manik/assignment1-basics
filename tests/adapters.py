@@ -1,15 +1,16 @@
 from __future__ import annotations
 
 import os
-from typing import IO, Any, BinaryIO
+from typing import IO, Any, BinaryIO, Dict
 from collections.abc import Iterable
 from jaxtyping import Float, Int
+
 
 import numpy.typing as npt
 import torch
 from torch import Tensor
-
-
+from cs336_basics.linear import Linear 
+from cs336_basics.embedding import Embedding
 
 def run_linear(
     d_in: int,
@@ -29,8 +30,11 @@ def run_linear(
     Returns:
         Float[Tensor, "... d_out"]: The transformed output of your linear module.
     """
+    model = Linear(in_features=d_in, out_features=d_out)
+    state_dict: Dict[str, Tensor] = {'W': weights}
+    model.load_state_dict(state_dict)
 
-    raise NotImplementedError
+    return model(in_features)
 
 
 def run_embedding(
@@ -51,8 +55,14 @@ def run_embedding(
     Returns:
         Float[Tensor, "... d_model"]: Batch of embeddings returned by your Embedding layer.
     """
+    
+    model  = Embedding(num_embeddings=vocab_size,embedding_dim=d_model)
+    state_dict: Dict[str, torch.Tensor] = {'embedding_table': weights}
+    model.load_state_dict(state_dict)
+    
+    return model(token_ids)
 
-    raise NotImplementedError
+    # raise NotImplementedError
 
 
 def run_swiglu(
@@ -84,6 +94,13 @@ def run_swiglu(
     # swiglu.w1.weight.data = w1_weight
     # swiglu.w2.weight.data = w2_weight
     # swiglu.w3.weight.data = w3_weight
+
+    swiglu = SwiGLU(d_model=d_model, d_ff=d_ff)
+    swiglu.w1.W.data = w1_weight
+    swiglu.w2.W.data =w2_weight 
+    swiglu.w3.W.data = w3_weight
+    out = swiglu(in_features)
+    return out 
     raise NotImplementedError
 
 
@@ -181,7 +198,7 @@ def run_multihead_self_attention_with_rope(
     """
     raise NotImplementedError
 
-
+from cs336_basics.rope import RotaryPositionalEmbedding
 def run_rope(
     d_k: int,
     theta: float,
@@ -201,6 +218,8 @@ def run_rope(
     Returns:
         Float[Tensor, " ... sequence_length d_k"]: Tensor with RoPEd input.
     """
+    r = RotaryPositionalEmbedding(theta=theta, d_k=d_k, max_seq_len=max_seq_len)
+    return r(in_query_or_key, token_positions)
     raise NotImplementedError
 
 
@@ -357,7 +376,7 @@ def run_transformer_lm(
         next-word distribution for each token.
     """
     raise NotImplementedError
-
+from cs336_basics.rmsnorm import RMSNORM
 
 def run_rmsnorm(
     d_model: int,
@@ -379,9 +398,14 @@ def run_rmsnorm(
         Float[Tensor,"... d_model"]: Tensor of with the same shape as `in_features` with the output of running
         RMSNorm of the `in_features`.
     """
+    model  =RMSNORM(d_model=d_model,eps=eps)
+    state_dict:Dict[str, Tensor] = {"g" : weights}
+    model.load_state_dict(state_dict)
+
+    return model(in_features)
     raise NotImplementedError
 
-
+from cs336_basics.swiglu import SwiGLU
 def run_silu(in_features: Float[Tensor, " ..."]) -> Float[Tensor, " ..."]:
     """Given a tensor of inputs, return the output of applying SiLU
     to each element.
@@ -393,6 +417,8 @@ def run_silu(in_features: Float[Tensor, " ..."]) -> Float[Tensor, " ..."]:
         Float[Tensor,"..."]: of with the same shape as `in_features` with the output of applying
         SiLU to each element.
     """
+
+    
     raise NotImplementedError
 
 
@@ -418,7 +444,7 @@ def run_get_batch(
     """
     raise NotImplementedError
 
-
+from cs336_basics.softmax import softmax
 def run_softmax(in_features: Float[Tensor, " ..."], dim: int) -> Float[Tensor, " ..."]:
     """
     Given a tensor of inputs, return the output of softmaxing the given `dim`
@@ -432,7 +458,8 @@ def run_softmax(in_features: Float[Tensor, " ..."], dim: int) -> Float[Tensor, "
         Float[Tensor, "..."]: Tensor of with the same shape as `in_features` with the output of
         softmax normalizing the specified `dim`.
     """
-    raise NotImplementedError
+    return softmax(in_features, dim)
+    
 
 
 def run_cross_entropy(inputs: Float[Tensor, " batch_size vocab_size"], targets: Int[Tensor, " batch_size"]) -> Float[Tensor, ""]:
@@ -560,7 +587,7 @@ def get_tokenizer(
     """
     raise NotImplementedError
 
-
+# from cs336_basics.tokenizer import * 
 def run_train_bpe(
     input_path: str | os.PathLike,
     vocab_size: int,
@@ -588,4 +615,11 @@ def run_train_bpe(
                 representing that <token1> was merged with <token2>.
                 Merges are ordered by order of creation.
     """
-    raise NotImplementedError
+    from cs336_basics.bpe_tokenizer import Tokenizer 
+    vocab = {i : bytes([i]) for i in range(256)}
+    tokenizer = Tokenizer(vocab, [], special_tokens)
+    tokenizer.train(input_path, vocab_size)
+    vocab = tokenizer.get_vocab()
+    merges = tokenizer.get_merges()
+
+    return vocab, merges
