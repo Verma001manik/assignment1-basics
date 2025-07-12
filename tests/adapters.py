@@ -306,7 +306,7 @@ def run_transformer_block(
     return block(in_features, weights)
     raise NotImplementedError
 
-
+from cs336_basics.transformerlm import TransformerLM
 def run_transformer_lm(
     vocab_size: int,
     context_length: int,
@@ -386,6 +386,8 @@ def run_transformer_lm(
         Float[Tensor, "batch_size sequence_length vocab_size"]: Tensor with the predicted unnormalized
         next-word distribution for each token.
     """
+    t = TransformerLM(vocab_size=vocab_size, context_length=context_length,num_layers=num_layers, d_model=d_model,num_heads=num_heads,d_ff=d_ff, theta=rope_theta)
+    return t(in_indices, weights)
     raise NotImplementedError
 from cs336_basics.rmsnorm import RMSNORM
 
