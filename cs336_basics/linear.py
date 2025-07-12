@@ -9,8 +9,8 @@ class Linear(nn.Module):
 
         W = torch.empty((out_features, in_features) ,**factory_kwargs)
         nn.init.trunc_normal_(W, std=0.2)
-        self.W = nn.Parameter(W)
+        self.weight = nn.Parameter(W)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        x = x @ self.W.T
+        x = x @ self.weight.T
         return x 
