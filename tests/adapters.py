@@ -158,9 +158,9 @@ def run_multihead_self_attention(
         Float[Tensor, " ... sequence_length d_out"]: Tensor with the output of running your optimized, batched multi-headed attention
         implementation with the given QKV projection weights and input features.
     """
-    mha = CausalMultiHeadAttention(d_model=d_model, num_heads=num_heads)
-    out = mha(in_features, q_proj_weight, k_proj_weight, v_proj_weight, o_proj_weight)
-    return out 
+    # mha = CausalMultiHeadAttention(d_model=d_model, num_heads=num_heads)
+    # out = mha(in_features, q_proj_weight, k_proj_weight, v_proj_weight, o_proj_weight)
+    # return out 
     raise NotImplementedError
 
 
@@ -201,6 +201,9 @@ def run_multihead_self_attention_with_rope(
         Float[Tensor, " ... sequence_length d_out"]: Tensor with the output of running your optimized, batched multi-headed attention
         implementation with the given QKV projection weights and input features.
     """
+    mha = CausalMultiHeadAttention(d_model=d_model, num_heads=num_heads, theta=theta, max_seq_len=max_seq_len)
+    out = mha(in_features, q_proj_weight, k_proj_weight, v_proj_weight, o_proj_weight, token_positions)
+    return out
     raise NotImplementedError
 
 from cs336_basics.rope import RotaryPositionalEmbedding

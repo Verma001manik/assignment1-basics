@@ -164,4 +164,8 @@ cython_debug/
 
 data/tokenizers
 data/
-
+profile.html 
+profile.json 
+uv.lock 
+cs336_spring2025_assignment1_basics.pdf
+CHANGELOG.md
