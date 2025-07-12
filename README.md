@@ -51,3 +51,4 @@ cd ..
 ### Notes 
 bpe_tokenizer.py doesn't pass all the test cases on windows 
 bpe_tokenizer.py passes all test cases on linux/linux-mint
+softmax shown its true colors

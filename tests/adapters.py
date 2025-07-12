@@ -457,7 +457,7 @@ def run_get_batch(
     """
     raise NotImplementedError
 
-from cs336_basics.softmax import softmax
+from cs336_basics.softmax import softmax, cross_entropy
 def run_softmax(in_features: Float[Tensor, " ..."], dim: int) -> Float[Tensor, " ..."]:
     """
     Given a tensor of inputs, return the output of softmaxing the given `dim`
@@ -488,6 +488,8 @@ def run_cross_entropy(inputs: Float[Tensor, " batch_size vocab_size"], targets: 
     Returns:
         Float[Tensor, ""]: The average cross-entropy loss across examples.
     """
+    c = cross_entropy(logits=inputs, targets=targets)
+    return c
     raise NotImplementedError
 
 
