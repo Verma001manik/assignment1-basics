@@ -6,32 +6,28 @@ import torch.nn as nn
 # import math
 import numpy as np
 # from cs336_basics.sgd import SGD
-# from collections.abc import Callable ,  Iterable
-# from typing import Optional 
+#
+from cs336_basics.dataloader import data_loading
+import pickle 
 
+from cs336_basics.bpe_tokenizer import Tokenizer, from_files
 
+with open("data/tokenizers/owt_valid_vocab.pkl", "rb") as f :
+        vocab = pickle.load(f)
+with open("data/tokenizers/owt_valid_merges.pkl", "rb") as f :
+        merges = pickle.load(f)
 
-# Simple neural network with 1 hidden layer
+tknzr = Tokenizer(vocab=vocab, merges=merges)
 
-# Simple neural network with 1 hidden layer
-class SimpleNN(nn.Module):
-    def __init__(self):
-        super(SimpleNN, self).__init__()
-        self.fc1 = nn.Linear(3, 4)  # input: 3 features, hidden: 4 neurons
-        self.relu = nn.ReLU()
-        self.fc2 = nn.Linear(4, 1)  # output: 1 value
+with open("data/TinyStoriesV2-GPT4-valid.txt", "rb") as f :
+        data = f.read().decode("utf-8")
+        #print(data[:5000])
 
-    def forward(self, x):
-        x = self.fc1(x)
-        x = self.relu(x)
-        x = self.fc2(x)
-        return x
+        encoded = tknzr.encode(data[:5000])
+        
 
-# Create model instance
-model = SimpleNN()
+dataset = np.array(encoded)
+x,y = data_loading(dataset, 64, 256, device="cpu")
+print(x.shape)  
 
-# Print state_dict
-# print("State dict:\n")
-# for name, param in model.state_dict().items():
-#     print(f"{name}:\n{param}\n")
-print(model.state_dict())
+print(y)

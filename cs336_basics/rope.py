@@ -53,7 +53,8 @@ class RotaryPositionalEmbedding(nn.Module):
         sin = self.sin[token_positions]
         cos = self.cos[token_positions]
 
-
+        sin = sin.unsqueeze(1)
+        cos = cos.unsqueeze(1)
         x1 = x[..., 0::2]
         x2 = x[..., 1::2]
         x_rotated= torch.zeros_like(x)

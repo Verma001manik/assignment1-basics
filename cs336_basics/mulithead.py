@@ -31,7 +31,7 @@ def scaled_dot_product_attention(q,k,v, mask=None):
 
     
 class CausalMultiHeadAttention(nn.Module):
-    def __init__(self, d_model, num_heads):
+    def __init__(self, d_model, num_heads,theta, max_seq_len):
         super().__init__()
 
         self.d_model = d_model
@@ -56,10 +56,10 @@ class CausalMultiHeadAttention(nn.Module):
         self.w_v =nn.Linear(self.d_model, self.d_v*num_heads)
 
         # d_in means d_model 
-        
+        self.rope = RotaryPositionalEmbedding(theta=theta, d_k= self.d_k,max_seq_len=max_seq_len )
 
     
-    def forward(self, x):
+    def forward(self, x, token_positions):
         # "x =  ... sequence_length d_in"
         # w_k = d_in, d_in
         # w_k(x) --> seq_len d_in @ d_in  d_in -> seq_len d_in
@@ -80,6 +80,8 @@ class CausalMultiHeadAttention(nn.Module):
         q = rearrange(q, "... seq_len (h d_k) -> ... h seq_len d_k",h=self.num_heads)
         k = rearrange(k, "... seq_len (h d_k) -> ... h seq_len d_k",h=self.num_heads)
         v  = rearrange(v, "... seq_len (h d_v) -> ... h seq_len d_v",h=self.num_heads)
+        q =self.rope(q,token_positions )
+        k = self.rope(k, token_positions)
         attn_scores = scaled_dot_product_attention(q,k,v, mask=mask)
         
         out = rearrange(attn_scores, "... h seq_len d_v -> ... seq_len (h d_v)")
