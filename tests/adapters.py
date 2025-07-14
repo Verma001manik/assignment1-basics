@@ -504,7 +504,7 @@ def run_gradient_clipping(parameters: Iterable[torch.nn.Parameter], max_l2_norm:
     """
     raise NotImplementedError
 
-from cs336_basics.sgd import AdamW
+from cs336_basics.sgd import AdamW,learning_rate_schedule
 def get_adamw_cls() -> type[torch.optim.Optimizer]:
     """
     Returns a torch.optim.Optimizer that implements AdamW.
@@ -538,6 +538,7 @@ def run_get_lr_cosine_schedule(
     Returns:
         Learning rate at the given iteration under the specified schedule.
     """
+    return learning_rate_schedule(it,max_learning_rate,min_learning_rate,warmup_iters, cosine_cycle_iters)
     raise NotImplementedError
 
 

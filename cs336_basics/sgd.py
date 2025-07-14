@@ -74,3 +74,15 @@ class AdamW(Optimizer):
                 p.data = p.data - update - decay
 
         return loss
+
+
+import math
+
+def learning_rate_schedule(t, alpha_max, alpha_min, tw, tc):
+    if t < tw:
+        return (t / tw) * alpha_max
+    elif t > tc:
+        return alpha_min
+    else:
+        cosine = math.cos((t - tw) / (tc - tw) * math.pi)
+        return alpha_min + 0.5 * (1 + cosine) * (alpha_max - alpha_min)
