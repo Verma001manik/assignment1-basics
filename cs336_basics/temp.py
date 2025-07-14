@@ -6,17 +6,27 @@ import torch.nn as nn
 import math
 import numpy as np
 from cs336_basics.sgd import SGD
+from collections.abc import Callable ,  Iterable
+from typing import Optional 
 
-weights = torch.nn.Parameter(5 * torch.randn((10, 10)))
-print(weights.shape)
-opt = SGD([weights], lr=1e3)
-for t in range(10):
-    opt.zero_grad() # Reset the gradients for all learnable parameters.
-    loss = (weights**2).mean() # Compute a scalar loss value.
-    print(loss.cpu().item())
-    loss.backward() # Run backward pass, which computes gradients.
-    opt.step() # Run optimizer ste
+import torch
 
+param = torch.tensor([[0.5, -0.3], [0.1, 0.8]], requires_grad=True)
 
+lr = 0.1        
+beta1 = 0.9        
+beta2 = 0.999      
+eps = 1e-8       
+lam = 0.01        
+m = torch.zeros_like(param)
+v = torch.zeros_like(param)
+t = 1  
 
-#1e1 is better 
+grad = param.grad.data
+
+m = beta1 * m + (1 - beta1) * grad
+v = beta2 * v + (1 - beta2) * grad * grad
+
+lr_t = lr * (math.sqrt(1 - beta2 ** t) / (1 - beta1 ** t))
+
+param.data = param.data - lr_t * m / (v.sqrt() + eps)
