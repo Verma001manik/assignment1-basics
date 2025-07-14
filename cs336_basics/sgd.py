@@ -86,3 +86,23 @@ def learning_rate_schedule(t, alpha_max, alpha_min, tw, tc):
     else:
         cosine = math.cos((t - tw) / (tc - tw) * math.pi)
         return alpha_min + 0.5 * (1 + cosine) * (alpha_max - alpha_min)
+
+
+
+def gradient_clipping(parameters, max_l2_norm):
+    grads =[p.grad for p in parameters if p.grad is not None]
+    eps = 1e-6
+    total_norm = torch.norm(torch.cat([g.view(-1) for g in grads]), 2)
+
+    if total_norm > max_l2_norm:
+        scale  = max_l2_norm/(total_norm+ eps)
+
+        for p in parameters:
+            if p.grad is not None:
+
+                p.grad.data.mul_(scale)
+
+    
+
+        
+    

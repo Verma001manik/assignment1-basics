@@ -502,9 +502,9 @@ def run_gradient_clipping(parameters: Iterable[torch.nn.Parameter], max_l2_norm:
 
     The gradients of the parameters (parameter.grad) should be modified in-place.
     """
-    raise NotImplementedError
+    gradient_clipping(parameters=parameters, max_l2_norm=max_l2_norm)
 
-from cs336_basics.sgd import AdamW,learning_rate_schedule
+from cs336_basics.sgd import AdamW,learning_rate_schedule, gradient_clipping
 def get_adamw_cls() -> type[torch.optim.Optimizer]:
     """
     Returns a torch.optim.Optimizer that implements AdamW.
