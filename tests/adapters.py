@@ -434,7 +434,7 @@ def run_silu(in_features: Float[Tensor, " ..."]) -> Float[Tensor, " ..."]:
     
     raise NotImplementedError
 
-
+from cs336_basics.dataloader import data_loading
 def run_get_batch(
     dataset: npt.NDArray, batch_size: int, context_length: int, device: str
 ) -> tuple[torch.Tensor, torch.Tensor]:
@@ -455,6 +455,8 @@ def run_get_batch(
         is the sampled input sequences, and the second tuple item is the corresponding
         language modeling labels.
     """
+    r = data_loading(x=dataset, batch_size=batch_size, context_length=context_length, device=device)
+    return r 
     raise NotImplementedError
 
 from cs336_basics.softmax import softmax, cross_entropy
