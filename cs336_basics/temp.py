@@ -9,33 +9,29 @@ import numpy as np
 # from collections.abc import Callable ,  Iterable
 # from typing import Optional 
 
-# import torch
 
-# param = torch.tensor([[0.5, -0.3], [0.1, 0.8]], requires_grad=True)
 
-# lr = 0.1        
-# beta1 = 0.9        
-# beta2 = 0.999      
-# eps = 1e-8       
-# lam = 0.01        
-# m = torch.zeros_like(param)
-# v = torch.zeros_like(param)
-# t = 1  
+# Simple neural network with 1 hidden layer
 
-# grad = param.grad.data
+# Simple neural network with 1 hidden layer
+class SimpleNN(nn.Module):
+    def __init__(self):
+        super(SimpleNN, self).__init__()
+        self.fc1 = nn.Linear(3, 4)  # input: 3 features, hidden: 4 neurons
+        self.relu = nn.ReLU()
+        self.fc2 = nn.Linear(4, 1)  # output: 1 value
 
-# m = beta1 * m + (1 - beta1) * grad
-# v = beta2 * v + (1 - beta2) * grad * grad
+    def forward(self, x):
+        x = self.fc1(x)
+        x = self.relu(x)
+        x = self.fc2(x)
+        return x
 
-# lr_t = lr * (math.sqrt(1 - beta2 ** t) / (1 - beta1 ** t))
-# Your Name, Student ID, Mail (replace with your credentials)
-x = np.random.randint(0, 100 , size=20)
-print(x)
-bs  = 1
-clen = 3
-a = torch.from_numpy(x)
+# Create model instance
+model = SimpleNN()
 
-b = torch.stack([a[i:i+clen] for i in range(0,bs)])
-temp = torch.stack([a[i+1: i+1+clen] for i in range(0, bs)])
-print(b)
-print(temp)
+# Print state_dict
+# print("State dict:\n")
+# for name, param in model.state_dict().items():
+#     print(f"{name}:\n{param}\n")
+print(model.state_dict())

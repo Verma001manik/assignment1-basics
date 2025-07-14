@@ -22,3 +22,24 @@ def data_loading(x, batch_size, context_length, device: str):
     y = torch.tensor(tensor2, dtype=torch.long, device=device)
 
     return x,y
+
+
+
+def save_checkpoint(model , optimizer, iteration, out):
+    checkpoint = {
+        "model_state": model.state_dict(),
+        "optimizer_state": optimizer.state_dict(),
+        "iteration": iteration
+    }
+    torch.save(checkpoint, out)
+
+
+
+def load_checkpoint(src, model, optimizer):
+    checkpoint = torch.load(src)
+
+    model.load_state_dict(checkpoint["model_state"])
+    optimizer.load_state_dict(checkpoint["optimizer_state"])
+    iteration = checkpoint["iteration"]
+
+    return iteration
